@@ -6,7 +6,7 @@ function NameItem({ name, onRemove, onRepeat }) {
       <button onClick={onRepeat}>
         repeat
       </button>
-      <button onRemove={onRemove}>
+      <button onClick={onRemove}>
         remove
       </button>
       <span>{name}</span>
@@ -17,10 +17,11 @@ function NameItem({ name, onRemove, onRepeat }) {
 export default function App() {
   const [names, setNames] = useState(["AC", "React", "Course"]);
 
-  const removeName = (index) => {
-    const afterDeleteNames = [...names];
-    afterDeleteNames.splice(index, 1);
-    setNames(afterDeleteNames);
+  const removeName = (targetIndex) => {
+    const newNames = names.filter((name, index) => (
+      index !== targetIndex
+    ));
+    setNames(newNames);
   }
 
   const repeatName = (targetIndex) => {
