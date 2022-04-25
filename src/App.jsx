@@ -1,12 +1,12 @@
 import { useState } from "react";
 
-function NameItem({ name, onClick, index }) {
+function NameItem({ name, onRemove, onRepeat }) {
   return (
     <div>
-      <button className="repeatBtn" onClick={onClick} data-id={index}>
+      <button onClick={onRepeat}>
         repeat
       </button>
-      <button className="removeBtn" onClick={onClick} data-id={index}>
+      <button onRemove={onRemove}>
         remove
       </button>
       <span>{name}</span>
@@ -17,17 +17,17 @@ function NameItem({ name, onClick, index }) {
 export default function App() {
   const [names, setNames] = useState(["AC", "React", "Course"]);
 
-  const handleBtn = (event) => {
-    if (event.target.className === "removeBtn") {
-      const afterDeleteNames = [...names];
-      afterDeleteNames.splice(Number(event.target.dataset.id), 1);
-      setNames(afterDeleteNames);
-    } else if (event.target.className === "repeatBtn") {
-      const newNames = [...names].map((name, index) =>
-        index === Number(event.target.dataset.id) ? name.repeat(2) : name
-      );
-      setNames(newNames);
-    }
+  const removeName = (index) => {
+    const afterDeleteNames = [...names];
+    afterDeleteNames.splice(index, 1);
+    setNames(afterDeleteNames);
+  }
+
+  const repeatName = (targetIndex) => {
+    const newNames = names.map((name, index) => (
+      index === targetIndex ? name.repeat(2) : name
+    ));
+    setNames(newNames);
   };
 
   const addFooBtn = () => {
@@ -36,7 +36,11 @@ export default function App() {
   return (
     <div>
       {names.map((name, index) => (
-        <NameItem name={name} index={index} onClick={handleBtn} />
+        <NameItem
+          name={name}
+          onRemove={() => removeName(index)}
+          onRepeat={() => repeatName(index)}
+        />
       ))}
       <button onClick={addFooBtn}>Add Foo Name</button>
     </div>
